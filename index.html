@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kopi Dua Arah - Platform Pemesanan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        coffee: {
+                            dark: '#2D1E18',
+                            brown: '#4A3525',
+                            cream: '#E6DCD2',
+                            light: '#F7F3EE'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-coffee-light text-coffee-dark font-sans antialiased">
+
+    <header class="bg-coffee-cream py-12 px-6 text-center border-b-4 border-coffee-brown">
+        <h1 class="text-4xl font-extrabold tracking-wide uppercase mb-2 text-coffee-dark">dua arah</h1>
+        <p class="text-xs tracking-widest uppercase text-coffee-brown mb-4">— COFFEE —</p>
+        <blockquote class="text-lg italic font-medium max-w-md mx-auto mb-6">
+            "Dua arah, banyak tujuan. Berbagi cerita, satu rasa."
+        </blockquote>
+        <a href="#menu" class="bg-coffee-brown text-white px-6 py-3 rounded-full font-bold shadow-lg hover:bg-coffee-dark transition">
+            Pesan Sekarang
+        </a>
+    </header>
+
+    <main class="max-w-md mx-auto px-4 py-8 pb-24">
+        
+        <div class="bg-coffee-brown text-coffee-light p-4 rounded-xl mb-8 shadow-md text-center">
+            <h3 class="font-bold text-lg mb-1">👥 Pesan Bareng Lebih Seru!</h3>
+            <p class="text-sm opacity-90">Kumpulkan pesanan teman kantor atau komunitasmu dalam satu kali kirim.</p>
+        </div>
+
+        <section id="menu" class="mb-8">
+            <h2 class="text-xl font-bold border-b-2 border-coffee-brown pb-2 mb-4">📋 Menu Pilihan</h2>
+            
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-coffee-cream flex gap-4 items-center">
+                <div class="w-20 h-24 bg-coffee-cream rounded-lg flex items-center justify-center font-bold text-xs text-center text-coffee-brown p-2 shadow-inner">
+                    Kopi Susu Dua Arah
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-bold text-base text-coffee-dark">Kopi Susu Dua Arah</h3>
+                    <p class="text-xs text-gray-500 mb-2">Rasa seimbang, teman terbaik di setiap arah perjalananmu. (250ml)</p>
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-coffee-brown">Rp 22.000</span>
+                        
+                        <div class="flex items-center gap-2 border border-coffee-brown rounded-lg bg-coffee-light">
+                            <button onclick="changeQty(-1)" class="px-3 py-1 font-bold text-coffee-brown hover:bg-coffee-cream rounded-l-lg">-</button>
+                            <span id="qty-display" class="font-bold text-sm w-4 text-center">0</span>
+                            <button onclick="changeQty(1)" class="px-3 py-1 font-bold text-coffee-brown hover:bg-coffee-cream rounded-r-lg">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-white p-4 rounded-xl shadow-sm border border-coffee-cream mb-8">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-coffee-brown mb-3">Kustomisasi Rasa</h2>
+            
+            <div class="mb-4">
+                <label class="block text-xs font-bold mb-1 text-gray-600">Tingkat Kemanisan:</label>
+                <select id="sweetness" class="w-full p-2 text-sm bg-coffee-light border border-coffee-cream rounded-lg focus:outline-none focus:border-coffee-brown">
+                    <option value="Normal Sweet">Normal Sweet (Rasa Seimbang)</option>
+                    <option value="Less Sugar">Less Sugar (Kurang Manis)</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold mb-1 text-gray-600">Pilihan Es Batu:</label>
+                <select id="ice-level" class="w-full p-2 text-sm bg-coffee-light border border-coffee-cream rounded-lg focus:outline-none focus:border-coffee-brown">
+                    <option value="Normal Ice">Normal Ice (Segar Maksimal)</option>
+                    <option value="Less Ice">Less Ice</option>
+                    <option value="No Ice">No Ice (Suhu Ruang)</option>
+                </select>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-coffee-cream p-4 flex gap-3 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
+        <button onclick="kirimOrder('Bareng')" class="flex-1 bg-coffee-cream text-coffee-dark py-3 rounded-xl font-bold text-sm text-center hover:bg-opacity-80 transition">
+            👥 Pesan Bareng
+        </button>
+        <button onclick="kirimOrder('Sendiri')" class="flex-1 bg-coffee-brown text-white py-3 rounded-xl font-bold text-sm text-center hover:bg-coffee-dark transition shadow-md">
+            🛒 Pesan Sendiri
+        </button>
+    </div>
+
+    <script>
+        let quantity = 0;
+        const hargaProduk = 22000;
+
+        function changeQty(amount) {
+            quantity = Math.max(0, quantity + amount);
+            document.getElementById('qty-display').innerText = quantity;
+        }
+
+        function kirimOrder(tipe) {
+            if (quantity === 0) {
+                alert('Silakan tambah jumlah kopi terlebih dahulu sebelum memesan.');
+                return;
+            }
+
+            const kemanisan = document.getElementById('sweetness').value;
+            const es = document.getElementById('ice-level').value;
+            const totalHarga = quantity * hargaProduk;
+            
+            // Format Rupiah sederhana
+            const totalFormat = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(totalHarga);
+
+            // Membuat format text otomatis untuk WhatsApp admin
+            let pesan = `Halo Admin Kopi Dua Arah!\n\n`;
+            pesan += `Saya ingin membuat *Pesan ${tipe}* lewat Link Bio:\n`;
+            pesan += `--------------------------------------\n`;
+            pesan += `📦 *Menu:* Kopi Susu Dua Arah (250ml)\n`;
+            pesan += `🔢 *Jumlah:* ${quantity} botol\n`;
+            pesan += `🍯 *Manis:* ${kemanisan}\n`;
+            pesan += `🧊 *Es:* ${es}\n`;
+            pesan += `--------------------------------------\n`;
+            pesan += `💰 *Estimasi Total:* ${totalFormat}\n\n`;
+            pesan += `Mohon info ketersediaan dan detail pengirimannya ya. Terima kasih!`;
+
+            // Ganti nomor ini dengan nomor WhatsApp bisnis Kopi Dua Arah Anda
+            const nomorWA = "6288210129982"; 
+            
+            // Mengarahkan ke WhatsApp
+            window.open(`https://wa.me/${nomorWA}?text=${encodeURIComponent(pesan)}`, '_blank');
+        }
+    </script>
+
+</body>
+</html>
